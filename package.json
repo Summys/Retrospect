@@ -1,0 +1,88 @@
+{
+  "name": "RNBoilerplate",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "lint": "eslint src",
+    "storybook": "storybook start -p 7007 --haul webpack.haul.storybook.js",
+    "start:ios": "yarn haul start -- --platform ios",
+    "test:unit": "jest",
+    "test": "yarn lint && yarn flow && jest",
+    "haul": "haul",
+    "ios:dev": "cp src/config/environment/development.env.js src/config/config.env.js && react-native run-ios --simulator='iPhone X'",
+    "ios:prod": "cp src/config/environment/production.env.js src/config/config.env.js && react-native run-ios --simulator='iPhone X'",
+    "pretty": "prettier --semi false --print-width 100 --single-quote --trailing-comma all --write \"src/**/*.js\"",
+    "precommit": "lint-staged && yarn test",
+    "eslint-check": "eslint --print-config . | eslint-config-prettier-check"
+  },
+  "dependencies": {
+    "core-js": "^2.5.7",
+    "react": "16.5.0",
+    "react-native": "0.57.0",
+    "react-native-navigation": "^2.0.2580",
+    "react-native-typography": "^1.4.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.0.0-0",
+    "@babel/runtime": "^7.1.2",
+    "@storybook/addon-actions": "^3.4.11",
+    "@storybook/addon-links": "^3.4.11",
+    "@storybook/addons": "^3.4.11",
+    "@storybook/react-native": "^3.4.11",
+    "babel-core": "^7.0.0-0",
+    "babel-eslint": "^10.0.1",
+    "babel-jest": "23.6.0",
+    "babel-runtime": "^6.26.0",
+    "detox": "^9.0.4",
+    "enzyme": "^3.7.0",
+    "enzyme-adapter-react-16": "^1.6.0",
+    "enzyme-to-json": "^3.3.4",
+    "eslint": "^5.7.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-config-prettier": "^3.1.0",
+    "eslint-plugin-flowtype": "^3.0.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^6.1.2",
+    "eslint-plugin-prettier": "^3.0.0",
+    "eslint-plugin-react": "^7.11.1",
+    "haul": "^1.0.0-rc.8",
+    "husky": "^1.1.2",
+    "jest": "23.6.0",
+    "lint-staged": "^7.3.0",
+    "metro-react-native-babel-preset": "0.48.1",
+    "patch-package": "^5.1.1",
+    "prettier": "^1.14.3",
+    "prop-types": "^15.6.2",
+    "react-dom": "^16.5.2",
+    "react-test-renderer": "16.5.0"
+  },
+  "lint-staged": {
+    "*.js": [
+      "yarn pretty",
+      "git add"
+    ]
+  },
+  "jest": {
+    "preset": "react-native",
+    "testMatch": [
+      "**/?(*.)test.js?(x)"
+    ],
+    "snapshotSerializers": [
+      "enzyme-to-json/serializer"
+    ],
+    "setupFiles": [
+      "<rootDir>/jest/setup.js"
+    ]
+  },
+  "detox": {
+    "test-runner": "jest",
+    "configurations": {
+      "ios.sim.debug": {
+        "binaryPath": "ios/build/Build/Products/Debug-iphonesimulator/RNBoilerplate.app",
+        "build": "xcodebuild -project ios/RNBoilerplate.xcodeproj -scheme RNBoilerplate -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build",
+        "type": "ios.simulator",
+        "name": "iPhone X"
+      }
+    }
+  }
+}
