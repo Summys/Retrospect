@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { Navigation } from 'react-native-navigation';
 import { SafeAreaView, Text, Button } from 'react-native';
+import { withApollo } from 'react-apollo';
 import PropTypes from 'prop-types';
 import ComponentRegister from '../../features/auth/children/ComponentRegister';
 import app from '../../features/app';
 
-export default class Login extends Component {
+class Login extends Component {
   state = {};
 
   navigateToRegister = () => {
@@ -27,3 +28,5 @@ export default class Login extends Component {
 Login.propTypes = {
   componentId: PropTypes.string.isRequired,
 };
+
+export default withApollo(Login, { withRef: true });

@@ -1,5 +1,5 @@
 import { StatusBar } from 'react-native';
-import './helpers/makeHMR';
+import './helpers/HMR';
 /* eslint-disable global-require */
 
 // import CodePush from 'react-native-code-push';
