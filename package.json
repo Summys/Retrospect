@@ -7,7 +7,7 @@
     "storybook": "storybook start -p 7007 --haul webpack.haul.storybook.js",
     "start:ios": "yarn haul start --platform ios",
     "test:unit": "jest",
-    "test": "yarn lint && jest",
+    "test": "yarn lint",
     "haul": "haul",
     "ios:dev": "cp src/config/environment/development.env.js src/config/config.env.js && react-native run-ios --simulator='iPhone X'",
     "ios:prod": "cp src/config/environment/production.env.js src/config/config.env.js && react-native run-ios --simulator='iPhone X'",
@@ -29,6 +29,7 @@
     "react-apollo": "^2.2.4",
     "react-native": "0.57.0",
     "react-native-navigation": "^2.0.2580",
+    "react-native-notifications": "^1.1.20",
     "react-native-typography": "^1.4.0"
   },
   "devDependencies": {
