@@ -1,0 +1,10 @@
+app_identifier("com.cult.reactnative.offline") # The bundle identifier of your app
+apple_id("devs@cultofcoders.com") # Your Apple email address
+apple_dev_portal_id "devs@cultofcoders.com"  # Apple Developer Account
+itunes_connect_id "devs@cultofcoders.com" 
+
+itc_team_id("118708324") # App Store Connect Team ID
+team_id("NFXRA74KCL") # Developer Portal Team ID
+
+# For more information about the Appfile, see:
+#     https://docs.fastlane.tools/advanced/#appfile

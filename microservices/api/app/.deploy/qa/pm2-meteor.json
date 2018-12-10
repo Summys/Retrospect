@@ -1,0 +1,25 @@
+{
+    "appName": "reactNativeOffline",
+    "appLocation": {
+      "local": "../.."
+    },
+    "meteorSettingsLocation": "./settings.json",
+    "meteorSettingsInRepo": false,
+    "prebuildScript": "",
+    "meteorBuildFlags": "--architecture os.linux.x86_64",
+    "env": {
+      "ROOT_URL": "http://167.99.32.172",
+      "PORT": 3000,
+      "MONGO_URL": "mongodb://localhost/reactNativeOffline"
+    },
+    "server": {
+      "host": "167.99.32.172",
+      "username": "root",
+      "password": "f8fc7687d78eac37571aa2584a1",
+      "deploymentDir": "/opt/meteor-apps",
+      "loadProfile": "",
+      "interpreter": "",
+      "exec_mode": "cluster_mode",
+      "instances": "1"
+    }
+  }

@@ -1,0 +1,33 @@
+export default {
+  Query: {
+    stories(_, { filters, options }, { db }, ast) {
+      $filters = filters;
+      $options = options;
+      const story = db.stories
+        .astToQuery(ast, {
+          $filters,
+          $options
+        })
+        .fetch();
+      return story;
+    }
+  },
+  Mutation: {
+    storyCreate(_, { data }, { db }) {
+      data.createdAt = new Date();
+      const storyId = db.stories.insert({
+        ...data
+      });
+      return db.stories.findOne(storyId);
+    },
+    storyEdit(_, { storyId, data }, { db }) {
+      db.stories.update(storyId, {
+        $set: { ...data }
+      });
+      return db.stories.findOne(storyId);
+    },
+    storyDelete(_, { storyId }, { db }) {
+      return db.stories.remove(storyId);
+    }
+  }
+};
