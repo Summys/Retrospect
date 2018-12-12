@@ -26,6 +26,7 @@ class EditStory extends Component {
   handleUpdateStory = async () => {
     const { client, _id, componentId } = this.props;
     const { name, description, isActive } = this.state;
+    console.log('_id edit', _id);
     const optimisticResponse = {
       __typename: 'Mutation',
       storyEdit: {

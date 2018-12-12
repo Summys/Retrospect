@@ -10,3 +10,4 @@ export const RESET_SCREEN = 'Reset';
 export const VERIFY_SCREEN = 'Verify';
 export const SPLASH_SCREEN = 'Splash';
 export const EDIT_STORY_SCREEN = 'EditStory';
+export const ADD_STORY_SCREEN = 'AddStory';

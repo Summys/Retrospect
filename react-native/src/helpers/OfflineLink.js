@@ -52,11 +52,13 @@ export default class OfflineLink extends ApolloLink {
 
       const subscription = forward(operation).subscribe({
         next: result => {
+          console.log('result', result);
           this.remove(attemptId);
           observer.next(result);
         },
 
-        error: async () => {
+        error: async networkError => {
+          console.log('networkError', networkError);
           observer.next({
             data: context.optimisticResponse,
             dataPresent: true,
@@ -116,7 +118,11 @@ export default class OfflineLink extends ApolloLink {
     const attempts = Array.from(queue);
 
     for (const [attemptId, attempt] of attempts) {
-      const result = await this.client.mutate({ ...attempt, optimisticResponse: undefined });
+      const result = await this.client.mutate({
+        ...attempt,
+        optimisticResponse: undefined,
+        ignoreResults: true,
+      });
 
       if (result) {
         queue.delete(attemptId);

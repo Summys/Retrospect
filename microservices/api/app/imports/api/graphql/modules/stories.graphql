@@ -4,14 +4,22 @@ type Query {
 
 type Mutation {
   storyCreate(data: StoryCreateInput): Story
-  storyEdit(storyId: String, data: StoryCreateInput): Story
+  storyEdit(storyId: String, data: StoryEditInput): Story
   storyDelete(storyId: String): StoryDeleteSuccess
 }
 
-input StoryCreateInput {
+input StoryEditInput {
   name: String,
   description: String,
   isActive: Boolean
+}
+
+input StoryCreateInput {
+  _id: String,
+  name: String,
+  description: String,
+  isActive: Boolean,
+  createdAt: String
 }
 
 type StoryDeleteSuccess {

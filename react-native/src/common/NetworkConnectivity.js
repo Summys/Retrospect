@@ -27,7 +27,7 @@ const networkActivity = isConnected => ` You are ${isConnected ? 'connected' : '
 
 const MiniOfflineSign = ({ isConnected, syncing }) => (
   <View style={[styles.container, isConnected ? styles.onlineContainer : styles.offlineContainer]}>
-    <Text style={styles.text}>{syncing ? 'Syncing...' : networkActivity(networkActivity)}</Text>
+    <Text style={styles.text}>{syncing ? 'Syncing...' : networkActivity(isConnected)}</Text>
   </View>
 );
 

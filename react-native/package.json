@@ -12,7 +12,6 @@
     "haul": "haul",
     "ios:dev": "cp src/config/environment/development.env.js src/config/config.env.js && react-native run-ios --simulator='iPhone X'",
     "ios:prod": "cp src/config/environment/production.env.js src/config/config.env.js && react-native run-ios --simulator='iPhone X'",
-    "precommit": "lint-staged && yarn test",
     "eslint-check": "eslint --print-config . | eslint-config-prettier-check"
   },
   "dependencies": {
@@ -32,6 +31,7 @@
     "graphql-tag": "^2.10.0",
     "lodash": "^4.17.11",
     "meteor-apollo-accounts": "^2.0.3",
+    "moment": "^2.22.2",
     "react": "16.5.0",
     "react-apollo": "^2.2.4",
     "react-native": "0.57.0",
@@ -104,6 +104,11 @@
         "type": "ios.simulator",
         "name": "iPhone X"
       }
+    }
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged && yarn test"
     }
   }
 }

@@ -24,9 +24,11 @@ import {
   VERIFY_SCREEN,
   SPLASH_SCREEN,
   EDIT_STORY_SCREEN,
+  ADD_STORY_SCREEN,
 } from './setScreens';
 import { client } from './client';
 import withProvider from './withProvider';
+import AddStory from '../screens/stories/AddStory';
 
 /* eslint-disable global-require */
 const Screens = new Map();
@@ -41,13 +43,12 @@ Screens.set(VERIFY_SCREEN, VerifyAccount);
 Screens.set(FORGOT_SCREEN, ForgotPassword);
 Screens.set(SPLASH_SCREEN, SplashScreen);
 Screens.set(EDIT_STORY_SCREEN, EditStory);
+Screens.set(ADD_STORY_SCREEN, AddStory);
 
-// initialize().then(client => {
 Screens.forEach((ScreenComponent, key) => {
   const Screen = withProvider(ScreenComponent);
   return Navigation.registerComponent(key, makeHot(() => Screen, key));
 });
-// });
 
 if (__DEV__) {
   if (module.hot) {
@@ -60,6 +61,13 @@ if (__DEV__) {
       redraw(
         () => withProvider(require('../screens/stories/EditStory').default, client),
         EDIT_STORY_SCREEN
+      );
+    });
+    module.hot.accept('../screens/stories/AddStory', () => {
+      clearCacheFor(require.resolve('../screens/stories/AddStory'));
+      redraw(
+        () => withProvider(require('../screens/stories/AddStory').default, client),
+        ADD_STORY_SCREEN
       );
     });
     module.hot.accept('../screens/search', () => {
