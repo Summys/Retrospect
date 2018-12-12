@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { withApollo } from 'react-apollo';
 import { Navigation } from 'react-native-navigation';
 import EDIT_STORY from '../../graphql/mutations/storyEdit';
-import QUERY_STORIES from '../../graphql/queries/queryStories';
+import OfflineNotice from '../../common/NetworkConnectivity';
 
 const defaultStyle = { borderWidth: 1, marginHorizontal: 50 };
 const defaultTextStyle = { marginHorizontal: 50 };
@@ -23,68 +23,41 @@ class EditStory extends Component {
     isActive: undefined,
   };
 
-  onUpdate = () => {
-    const { client, _id } = this.props;
-    const { name, description, isActive } = this.state;
-    let { stories } = client.readQuery({
-      query: QUERY_STORIES,
-      variables: { filters: {}, options: {} },
-    });
-    const storyIndex = stories.findIndex(story => story._id === _id);
-    const updatedStory = {
-      ...stories[storyIndex],
-      name,
-      description,
-      isActive,
-    };
-    stories = [...stories.slice(0, storyIndex), updatedStory, ...stories.slice(storyIndex + 1)];
-    client.writeQuery({
-      query: QUERY_STORIES,
-      variables: { filters: {}, options: {} },
-      data: { stories },
-    });
-  };
-
   handleUpdateStory = async () => {
     const { client, _id, componentId } = this.props;
     const { name, description, isActive } = this.state;
-    // const optimisticResponse = {
-    //   __typename: "Mutation",
-    //   storyEdit: {
-    //     __typename: "Story",
-    //     _id,
-    //     name,
-    //     description,
-    //     isActive,
-    //     createdAt: new Date()
-    //   }
-    // };
-    try {
-      await client.mutate({
-        variables: {
-          storyId: _id,
-          data: {
-            name,
-            description,
-            isActive,
-          },
+    const optimisticResponse = {
+      __typename: 'Mutation',
+      storyEdit: {
+        __typename: 'Story',
+        _id,
+        name,
+        description,
+        isActive,
+        createdAt: new Date(),
+      },
+    };
+    await client.mutate({
+      variables: {
+        storyId: _id,
+        data: {
+          name,
+          description,
+          isActive,
         },
-        mutation: EDIT_STORY,
-        // optimisticResponse,
-        // errorPolicy: "ignore",
-        update: this.onUpdate(),
-      });
-    } catch {
-      this.onUpdate();
-    }
+      },
+      mutation: EDIT_STORY,
+      optimisticResponse,
+    });
     Navigation.pop(componentId);
   };
 
   render() {
     const { name, description, isActive } = this.state;
     return (
-      <SafeAreaView>
-        <View>
+      <SafeAreaView style={{ flex: 1 }}>
+        <OfflineNotice />
+        <View style={{ flex: 0.8 }}>
           <Text style={defaultTextStyle}> Name</Text>
           <TextInput
             style={defaultStyle}

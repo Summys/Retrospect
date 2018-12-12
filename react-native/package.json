@@ -30,13 +30,15 @@
     "core-js": "^2.5.7",
     "graphql": "^14.0.2",
     "graphql-tag": "^2.10.0",
+    "lodash": "^4.17.11",
     "meteor-apollo-accounts": "^2.0.3",
     "react": "16.5.0",
     "react-apollo": "^2.2.4",
     "react-native": "0.57.0",
     "react-native-navigation": "^2.0.2580",
     "react-native-notifications": "^1.1.20",
-    "react-native-typography": "^1.4.0"
+    "react-native-typography": "^1.4.0",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0-0",

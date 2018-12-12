@@ -25,16 +25,20 @@ const deleteStoryOptimistic = (storyId, client) => {
   });
 };
 
-const handleDeleteStory = (storyId, client) => {
-  try {
-    client.mutate({
-      variables: { storyId },
-      mutation: REMOVE_STORY,
-      update: deleteStoryOptimistic(storyId, client),
-    });
-  } catch {
-    deleteStoryOptimistic(storyId, client);
-  }
+const handleDeleteStory = async (storyId, client) => {
+  const optimisticResponse = {
+    __typename: 'Mutation',
+    storyDelete: {
+      __typename: 'StoryDeleteSuccess',
+      _id: storyId,
+    },
+  };
+  await client.mutate({
+    variables: { storyId },
+    mutation: REMOVE_STORY,
+    update: deleteStoryOptimistic(storyId, client),
+    optimisticResponse,
+  });
 };
 
 const handleEditStory = (componentId, item) => {
@@ -56,6 +60,7 @@ const StoryItem = ({ componentId, item, client }) => (
       <TouchableHighlight style={edit} onPress={() => handleEditStory(componentId, item)}>
         <Text>Edit</Text>
       </TouchableHighlight>
+
       <TouchableHighlight style={remove} onPress={() => handleDeleteStory(item._id, client)}>
         <Text>Remove</Text>
       </TouchableHighlight>

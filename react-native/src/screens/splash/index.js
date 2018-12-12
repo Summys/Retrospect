@@ -51,8 +51,6 @@ export default class SplashScreen extends Component {
       NotificationsIOS.consumeBackgroundQueue();
     });
     const userId = await AsyncStorage.getItem('Meteor.userId');
-    // const apolloCachePersist = await AsyncStorage.getItem('apollo-cache-persist');
-    // const getAllKeys = await AsyncStorage.getAllKeys();
     if (userId) {
       app();
     } else {

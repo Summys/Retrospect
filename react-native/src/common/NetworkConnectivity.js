@@ -1,31 +1,40 @@
 import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 import { View, Text, NetInfo, Dimensions, StyleSheet } from 'react-native';
-import { withApollo } from 'react-apollo';
+import { withApollo, Query } from 'react-apollo';
 import { offlineLink } from '../helpers/client';
+import { syncStatusQuery } from '../helpers/OfflineLink';
 
 const { width } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   offlineContainer: {
     backgroundColor: '#b52424',
-    height: 30,
+  },
+  onlineContainer: {
+    backgroundColor: 'green',
+  },
+  container: {
+    flex: 0.05,
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
     width,
-    position: 'absolute',
-    top: 30,
   },
-  offlineText: { color: '#fff' },
+  text: { color: '#fff' },
 });
+const networkActivity = isConnected => ` You are ${isConnected ? 'connected' : 'disconnected'}`;
 
-function MiniOfflineSign() {
-  return (
-    <View style={styles.offlineContainer}>
-      <Text style={styles.offlineText}>No Internet Connection</Text>
-    </View>
-  );
-}
+const MiniOfflineSign = ({ isConnected, syncing }) => (
+  <View style={[styles.container, isConnected ? styles.onlineContainer : styles.offlineContainer]}>
+    <Text style={styles.text}>{syncing ? 'Syncing...' : networkActivity(networkActivity)}</Text>
+  </View>
+);
+
+MiniOfflineSign.propTypes = {
+  isConnected: PropTypes.bool.isRequired,
+  syncing: PropTypes.bool.isRequired,
+};
 
 class OfflineNotice extends PureComponent {
   state = {
@@ -43,20 +52,19 @@ class OfflineNotice extends PureComponent {
   handleConnectivityChange = isConnected => {
     if (isConnected) {
       this.setState({ isConnected });
-      offlineLink.open();
     } else {
       this.setState({ isConnected });
-      offlineLink.close();
     }
+    offlineLink.sync();
   };
 
   render() {
     const { isConnected } = this.state;
-    if (!isConnected) {
-      return <MiniOfflineSign />;
-    }
-    return null;
+    return (
+      <Query query={syncStatusQuery}>
+        {({ data }) => <MiniOfflineSign isConnected={isConnected} syncing={data.inflight} />}
+      </Query>
+    );
   }
 }
-
 export default withApollo(OfflineNotice);

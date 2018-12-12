@@ -27,7 +27,9 @@ export default {
       return db.stories.findOne(storyId);
     },
     storyDelete(_, { storyId }, { db }) {
-      return db.stories.remove(storyId);
+      const storyDeletedId = db.stories.findOne(storyId);
+      db.stories.remove(storyId);
+      return storyDeletedId
     }
   }
 };
