@@ -1,0 +1,13 @@
+patch-package
+--- a/node_modules/meteor-apollo-accounts/client/loginWithPassword.js
++++ b/node_modules/meteor-apollo-accounts/client/loginWithPassword.js
+@@ -49,6 +49,9 @@ exports.default = function () {
+                 username: username,
+                 email: email,
+                 password: (0, _hashPassword2.default)(password)
++              },
++              context: {
++                skip: true
+               }
+             });
+ 

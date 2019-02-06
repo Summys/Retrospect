@@ -14,10 +14,11 @@ export default {
   },
   Mutation: {
     storyCreate(_, { data }, { db }) {
-      db.stories.insert({
+      data.createdAt = new Date()
+      const _id = db.stories.insert({
         ...data,
       });
-      return db.stories.findOne(data._id);
+      return db.stories.findOne(_id);
     },
     storyEdit(_, { storyId, data }, { db }) {
       db.stories.update(storyId, {

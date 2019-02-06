@@ -46,9 +46,11 @@ class Login extends Component {
     if (email) {
       email = email.toLowerCase();
     }
-    loginWithPassword({ email, password }, client).then(() => {
-      app();
-    });
+    loginWithPassword({ email, password }, client)
+      .then(() => {
+        app();
+      })
+      .catch(e => console.log(e));
   };
 
   render() {

@@ -36,8 +36,10 @@ const Stories = ({ componentId, client }) => {
     <SafeAreaView style={{ flex: 1 }}>
       <OfflineNotice />
       <View style={{ flex: 0.85 }}>
-        <Query query={QUERY_STORIES} variables={{ filters, options }}>
+        <Query query={QUERY_STORIES} variables={{ filters, options }} context={{ isQuery: true }}>
           {({ loading, data, error }) => {
+            if (loading) return <Text>loading</Text>;
+            if (error) return <Text>{error.message}</Text>;
             if (data.stories) {
               return (
                 <FlatList
@@ -48,8 +50,6 @@ const Stories = ({ componentId, client }) => {
                 />
               );
             }
-            if (loading) return <Text>loading</Text>;
-            if (error) return <Text>{error.message}</Text>;
             return <Text>There is no data to show</Text>;
           }}
         </Query>

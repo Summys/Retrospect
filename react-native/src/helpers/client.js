@@ -5,8 +5,6 @@ import { HttpLink } from 'apollo-link-http';
 import { setContext } from 'apollo-link-context';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { persistCache } from 'apollo-cache-persist';
-// import { RetryLink } from 'apollo-link-retry';
-// import QueueLink from 'apollo-link-queue';
 import { ApolloLink } from 'apollo-link';
 import Config from '../config/config.env';
 import OfflineLink from './OfflineLink';
@@ -29,7 +27,6 @@ export const promisePersistCache = persistCache({
 const httpLink = new HttpLink({
   uri: Config.ENDPOINT,
 });
-// const retryLink = new RetryLink();
 
 const authMiddleware = setContext(() =>
   AsyncStorage.getItem('Meteor.loginToken').then(loginToken => ({

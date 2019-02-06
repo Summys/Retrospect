@@ -50,18 +50,19 @@ class OfflineNotice extends PureComponent {
   }
 
   handleConnectivityChange = isConnected => {
+    console.log('isConnected', isConnected);
     if (isConnected) {
       this.setState({ isConnected });
+      offlineLink.sync();
     } else {
       this.setState({ isConnected });
     }
-    offlineLink.sync();
   };
 
   render() {
     const { isConnected } = this.state;
     return (
-      <Query query={syncStatusQuery}>
+      <Query query={syncStatusQuery} context={{ isQuery: true }}>
         {({ data }) => <MiniOfflineSign isConnected={isConnected} syncing={data.inflight} />}
       </Query>
     );

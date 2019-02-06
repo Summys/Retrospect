@@ -1,6 +1,14 @@
 /* eslint-disable no-underscore-dangle */
 import React, { Component } from 'react';
-import { View, TextInput, Switch, SafeAreaView, Text, Button } from 'react-native';
+import {
+  View,
+  TextInput,
+  Switch,
+  SafeAreaView,
+  Text,
+  Button,
+  KeyboardAvoidingView,
+} from 'react-native';
 import PropTypes from 'prop-types';
 import { withApollo } from 'react-apollo';
 import { Navigation } from 'react-native-navigation';
@@ -26,7 +34,6 @@ class EditStory extends Component {
   handleUpdateStory = async () => {
     const { client, _id, componentId } = this.props;
     const { name, description, isActive } = this.state;
-    console.log('_id edit', _id);
     const optimisticResponse = {
       __typename: 'Mutation',
       storyEdit: {
@@ -57,34 +64,34 @@ class EditStory extends Component {
     const { name, description, isActive } = this.state;
     return (
       <SafeAreaView style={{ flex: 1 }}>
-        <OfflineNotice />
-        <View style={{ flex: 0.8 }}>
-          <Text style={defaultTextStyle}> Name</Text>
-          <TextInput
-            style={defaultStyle}
-            onChangeText={text => this.setState({ name: text })}
-            keyboard="email-address"
-            placeholder="Name"
-            returnKeyType="next"
-            blurOnSubmit={false}
-            editable
-            value={name}
-          />
-          <Text style={defaultTextStyle}> Description</Text>
-          <TextInput
-            style={defaultStyle}
-            onChangeText={text => this.setState({ description: text })}
-            multiline
-            editable
-            placeholder="Description"
-            keyboard="default"
-            secureTextEntry
-            value={description}
-          />
-          <Text>Is active ?</Text>
-          <Switch value={isActive} onValueChange={value => this.setState({ isActive: value })} />
-        </View>
-        <Button onPress={this.handleUpdateStory} title="Update" />
+        <KeyboardAvoidingView style={{ flex: 1 }}>
+          {/* <OfflineNotice /> */}
+          <View style={{ flex: 0.8 }}>
+            <Text style={defaultTextStyle}> Name</Text>
+            <TextInput
+              style={defaultStyle}
+              onChangeText={text => this.setState({ name: text })}
+              keyboard="email-address"
+              placeholder="Name"
+              editable
+              value={name}
+            />
+            <Text style={defaultTextStyle}> Description</Text>
+            <TextInput
+              style={defaultStyle}
+              onChangeText={text => this.setState({ description: text })}
+              multiline
+              editable
+              placeholder="Description"
+              keyboard="default"
+              secureTextEntry
+              value={description}
+            />
+            <Text>Is active ?</Text>
+            <Switch value={isActive} onValueChange={value => this.setState({ isActive: value })} />
+          </View>
+          <Button onPress={this.handleUpdateStory} title="Update" />
+        </KeyboardAvoidingView>
       </SafeAreaView>
     );
   }

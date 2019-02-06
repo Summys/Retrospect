@@ -36,8 +36,8 @@ const handleDeleteStory = async (storyId, client) => {
   await client.mutate({
     variables: { storyId },
     mutation: REMOVE_STORY,
-    update: deleteStoryOptimistic(storyId, client),
     optimisticResponse,
+    update: deleteStoryOptimistic(storyId, client),
   });
 };
 
@@ -55,6 +55,7 @@ const StoryItem = ({ componentId, item, client }) => (
     <View style={firstColumn}>
       <Text>{item.name}</Text>
       <Text>{item.description}</Text>
+      <Text>{`ID: ${item._id}`}</Text>
     </View>
     <View style={secondColumn}>
       <TouchableHighlight style={edit} onPress={() => handleEditStory(componentId, item)}>
