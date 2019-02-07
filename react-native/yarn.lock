@@ -10067,12 +10067,24 @@ react-modal@^3.3.2:
     react-lifecycles-compat "^3.0.0"
     warning "^3.0.0"
 
+react-native-camera@^1.10.1:
+  version "1.10.1"
+  resolved "https://registry.yarnpkg.com/react-native-camera/-/react-native-camera-1.10.1.tgz#6a2e86e8b1e7d5872832d6bd154a2628c9599567"
+  integrity sha512-sIHeG2dfBlOEkE093QSfXzFvjWdPCEz+ffkonvvLm7kRKPtiS+4gZM2zuH2SP4g3MJyKt8ifB/VIAxfnvtZ6sQ==
+  dependencies:
+    prop-types "^15.6.2"
+
 react-native-compat@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/react-native-compat/-/react-native-compat-1.0.0.tgz#491dbd8a0105ac061b8d0d926463ce6a3dff33bc"
   integrity sha1-SR29igEFrAYbjQ2SZGPOaj3/M7w=
   dependencies:
     prop-types "^15.5.10"
+
+react-native-image-picker@^0.28.0:
+  version "0.28.0"
+  resolved "https://registry.yarnpkg.com/react-native-image-picker/-/react-native-image-picker-0.28.0.tgz#e3f26df170ea932e9c0404624fbced2f59a300e3"
+  integrity sha512-lQfdOyC1mQ/pvfEaUGdoodO1A1clg9kf6YC1WdbWhA6XK+joBd9GQYf8SaCf6/7vM25U4ib+6ux4yvnrS1pOqQ==
 
 react-native-iphone-x-helper@^1.0.2:
   version "1.2.0"

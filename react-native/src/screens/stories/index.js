@@ -31,7 +31,6 @@ const handleAddStory = componentId => {
 const Stories = ({ componentId, client }) => {
   const filters = {};
   const options = {};
-  console.log('render client', client);
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <OfflineNotice />

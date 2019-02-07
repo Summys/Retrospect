@@ -208,8 +208,6 @@ export default class OfflineLink extends ApolloLink {
       }
     }
     this.saveQueue();
-    console.log('ajunge la reset', this.client);
-    // this.client.resetStore();
   }
 
   async setup(client) {

@@ -15,7 +15,6 @@ import { Navigation } from 'react-native-navigation';
 import uuidv4 from 'uuid/v4';
 import ADD_STORY from '../../graphql/mutations/storyCreate';
 import QUERY_STORIES from '../../graphql/queries/queryStories';
-import OfflineNotice from '../../common/NetworkConnectivity';
 
 const defaultStyle = { borderWidth: 1, marginHorizontal: 50 };
 const defaultTextStyle = { marginHorizontal: 50 };
@@ -76,7 +75,6 @@ class AddStory extends Component {
     return (
       <SafeAreaView style={{ flex: 1 }}>
         <KeyboardAvoidingView style={{ flex: 1 }}>
-          {/* <OfflineNotice /> */}
           <View>
             <Text style={defaultTextStyle}> Name</Text>
             <TextInput

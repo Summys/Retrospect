@@ -13,7 +13,6 @@ import PropTypes from 'prop-types';
 import { withApollo } from 'react-apollo';
 import { Navigation } from 'react-native-navigation';
 import EDIT_STORY from '../../graphql/mutations/storyEdit';
-import OfflineNotice from '../../common/NetworkConnectivity';
 
 const defaultStyle = { borderWidth: 1, marginHorizontal: 50 };
 const defaultTextStyle = { marginHorizontal: 50 };

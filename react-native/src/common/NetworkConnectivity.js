@@ -50,7 +50,6 @@ class OfflineNotice extends PureComponent {
   }
 
   handleConnectivityChange = isConnected => {
-    console.log('isConnected', isConnected);
     if (isConnected) {
       this.setState({ isConnected });
       offlineLink.sync();
