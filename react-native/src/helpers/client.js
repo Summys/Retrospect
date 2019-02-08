@@ -6,6 +6,7 @@ import { setContext } from 'apollo-link-context';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { persistCache } from 'apollo-cache-persist';
 import { ApolloLink } from 'apollo-link';
+import { createUploadLink } from 'apollo-upload-client';
 import Config from '../config/config.env';
 import OfflineLink from './OfflineLink';
 
@@ -24,9 +25,9 @@ export const promisePersistCache = persistCache({
   debug: true,
 });
 
-const httpLink = new HttpLink({
-  uri: Config.ENDPOINT,
-});
+// const httpLink = new HttpLink({
+//   uri: Config.ENDPOINT,
+// });
 
 const authMiddleware = setContext(() =>
   AsyncStorage.getItem('Meteor.loginToken').then(loginToken => ({
@@ -36,7 +37,7 @@ const authMiddleware = setContext(() =>
   }))
 );
 
-const link = ApolloLink.from([offlineLink, httpLink]);
+const link = ApolloLink.from([offlineLink, createUploadLink({ uri: Config.ENDPOINT })]);
 
 export const client = new ApolloClient({
   link: authMiddleware.concat(link),

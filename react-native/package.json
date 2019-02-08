@@ -26,6 +26,7 @@
     "apollo-link-offline": "^0.0.2",
     "apollo-link-queue": "^2.2.0",
     "apollo-link-retry": "^2.2.6",
+    "apollo-upload-client": "^10.0.0",
     "core-js": "^2.5.7",
     "graphql": "^14.0.2",
     "graphql-tag": "^2.10.0",

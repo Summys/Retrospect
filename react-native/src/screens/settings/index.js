@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
 import ImagePicker from 'react-native-image-picker';
+import { ReactNativeFile } from 'apollo-upload-client';
+import { withApollo } from 'react-apollo';
+import uuidv4 from 'uuid/v4';
+import UPLOAD_MUTATION from '../../graphql/mutations/uploadFile';
 
 // More info on all the options is below in the API Reference... just some common use cases shown here
 const options = {
@@ -37,13 +41,38 @@ const styles = StyleSheet.create({
   },
 });
 
-export default class Settings extends Component {
+class Settings extends Component {
   state = {
     avatarSource: null,
   };
 
+  handleUpload = async response => {
+    const { client } = this.props;
+    const optimisticResponse = {
+      __typename: 'Mutation',
+      singleUpload: {
+        __typename: 'File',
+        id: uuidv4(),
+        filename: response.fileName,
+        type: response.type,
+        path: response.uri,
+      },
+    };
+    const file = new ReactNativeFile({
+      uri: response.uri,
+      filename: response.fileName,
+      type: response.type,
+    });
+    await client.mutate({
+      mutation: UPLOAD_MUTATION,
+      variables: { file },
+      optimisticResponse,
+    });
+  };
+
   takePicture = async () => {
     ImagePicker.showImagePicker(options, response => {
+      console.log('RESPONSE', response);
       if (response.didCancel) {
         // console.log('User cancelled image picker');
       } else if (response.error) {
@@ -51,14 +80,7 @@ export default class Settings extends Component {
       } else if (response.customButton) {
         // console.log('User tapped custom button: ', response.customButton);
       } else {
-        // const source = { uri: response.uri };
-
-        // You can also display the image using data:
-        const source = { uri: `data:image/jpeg;base64,${response.data}` };
-
-        this.setState({
-          avatarSource: source,
-        });
+        this.handleUpload(response);
       }
     });
   };
@@ -77,3 +99,5 @@ export default class Settings extends Component {
     );
   }
 }
+
+export default withApollo(Settings);

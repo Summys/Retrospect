@@ -9,5 +9,5 @@ Object.assign(Config, {
         emails: 1,
         roles: 1,
         token: 1
-    }
+    },
 });
