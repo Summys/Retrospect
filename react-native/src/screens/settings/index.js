@@ -1,20 +1,14 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, Image, FlatList } from 'react-native';
 import ImagePicker from 'react-native-image-picker';
 import { ReactNativeFile } from 'apollo-upload-client';
-import { withApollo } from 'react-apollo';
+import { withApollo, Query } from 'react-apollo';
 import uuidv4 from 'uuid/v4';
 import UPLOAD_MUTATION from '../../graphql/mutations/uploadFile';
+import StoryItemSeparator from '../stories/StoryItemSeparator';
+import queryUploads from '../../graphql/queries/queryUploads';
 
 // More info on all the options is below in the API Reference... just some common use cases shown here
-const options = {
-  title: 'Select Avatar',
-  customButtons: [{ name: 'fb', title: 'Choose Photo from Facebook' }],
-  storageOptions: {
-    skipBackup: true,
-    path: 'images',
-  },
-};
 
 const styles = StyleSheet.create({
   container: {
@@ -27,8 +21,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   uploadAvatar: {
-    width: 300,
-    height: 300,
+    width: 150,
+    height: 150,
   },
   capture: {
     flex: 0,
@@ -42,36 +36,50 @@ const styles = StyleSheet.create({
 });
 
 class Settings extends Component {
-  state = {
-    avatarSource: null,
-  };
-
   handleUpload = async response => {
     const { client } = this.props;
+    const file = new ReactNativeFile({
+      uri: response.uri,
+      name: response.fileName,
+      type: response.type,
+    });
     const optimisticResponse = {
       __typename: 'Mutation',
       singleUpload: {
         __typename: 'File',
-        id: uuidv4(),
+        _id: uuidv4(),
         filename: response.fileName,
-        type: response.type,
+        mimetype: response.type,
         path: response.uri,
+        createdAt: new Date(),
       },
     };
-    const file = new ReactNativeFile({
-      uri: response.uri,
-      filename: response.fileName,
-      type: response.type,
-    });
     await client.mutate({
       mutation: UPLOAD_MUTATION,
       variables: { file },
       optimisticResponse,
+      update: (cache, { data: { singleUpload } }) => {
+        const { uploads } = cache.readQuery({
+          query: queryUploads,
+          variables: { filters: {}, options: {} },
+        });
+        console.log('uploads', uploads);
+        uploads.push(singleUpload);
+        cache.writeQuery({
+          query: queryUploads,
+          variables: { filters: {}, options: {} },
+          data: { uploads },
+        });
+      },
+      context: {
+        type: 'isCreate',
+        replaceId: 'storyId',
+      },
     });
   };
 
   takePicture = async () => {
-    ImagePicker.showImagePicker(options, response => {
+    ImagePicker.showImagePicker(response => {
       console.log('RESPONSE', response);
       if (response.didCancel) {
         // console.log('User cancelled image picker');
@@ -86,7 +94,8 @@ class Settings extends Component {
   };
 
   render() {
-    const { avatarSource } = this.state;
+    const filters = {};
+    const options = {};
     return (
       <View style={styles.container}>
         <View style={{ flex: 0, flexDirection: 'row', justifyContent: 'center' }}>
@@ -94,7 +103,27 @@ class Settings extends Component {
             <Text style={{ fontSize: 14 }}> SNAP </Text>
           </TouchableOpacity>
         </View>
-        <Image source={avatarSource} style={styles.uploadAvatar} />
+        <Query query={queryUploads} variables={{ filters, options }} context={{ isQuery: true }}>
+          {({ loading, data, error }) => {
+            console.log('{ loading, data, error }', { loading, data, error });
+            if (loading) return <Text>loading</Text>;
+            if (error) return <Text>{error.message}</Text>;
+            if (data.uploads) {
+              return (
+                <FlatList
+                  data={data.uploads}
+                  keyExtractor={item => item._id}
+                  renderItem={({ item }) => {
+                    console.log('item', item);
+                    return <Image source={{ uri: item.path }} style={styles.uploadAvatar} />;
+                  }}
+                  ItemSeparatorComponent={() => <StoryItemSeparator />}
+                />
+              );
+            }
+            return <Text>There is no data to show</Text>;
+          }}
+        </Query>
       </View>
     );
   }

@@ -1,11 +1,5 @@
-  type File {
-    id: ID!
-    path: String!
-    filename: String!
-    mimetype: String!
-  }
   type Query {
-    uploads: [File]
+    uploads(filters: JSON, options: JSON): [File]
   }
   type Mutation {
     singleUpload(file: Upload!): File!

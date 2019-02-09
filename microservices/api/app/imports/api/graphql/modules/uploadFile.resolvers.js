@@ -1,14 +1,14 @@
 import fs from 'fs'
 import mkdirp from 'mkdirp'
 import shortid from 'shortid'
-const UPLOAD_DIR = '/Users/user/uploads'
-
+import uri from 'path'
+const UPLOAD_DIR = uri.resolve('.').split(uri.sep + '.meteor')[0]+'/public/images'
 // Ensure upload directory exists.
 mkdirp.sync(UPLOAD_DIR)
 
 const storeFS = ({ stream, filename }) => {
-  const id = shortid.generate();
-  const path = `${UPLOAD_DIR}/${id}-${filename}`;
+  const id = `${shortid.generate()}-${filename}`;
+  let path = `${UPLOAD_DIR}/${id}`;
   return new Promise((resolve, reject) =>
     stream
       .on('error', error => {
@@ -19,20 +19,41 @@ const storeFS = ({ stream, filename }) => {
       })
       .pipe(fs.createWriteStream(path))
       .on('error', error => reject(error))
-      .on('finish', () => resolve({ id, path }))
+      .on('finish', () => {
+        path = `http://167.99.32.172:3000/images/${id}` //Meteor.settings
+        resolve({ id, path })
+      })
   );
 };
 
-const processUpload = async upload => {
+const storeDB = (file, db) => {
+  const _id = db.uploads.insert({ ...file })
+  return db.uploads.findOne(_id)
+}
+
+const processUpload = async (upload, db) => {
   console.log('UPLOAD', upload)
     const { stream, filename, mimetype } = await upload
     const { id, path } = await storeFS({ stream, filename })
-    console.log(id, path)
-    return { id, path, filename, mimetype }
+    console.log('id', id)
+    return storeDB({ id, path, filename, mimetype }, db)
   }
 
 export default {
+  Query: {
+    uploads(_, { filters, options }, { db }, ast) {
+      $filters = filters;
+      $options = options;
+      const upload = db.uploads
+        .astToQuery(ast, {
+          $filters,
+          $options,
+        })
+        .fetch();
+      return upload;
+    },
+  },
   Mutation: {
-    singleUpload: (obj, { file }) => processUpload(file)
+    singleUpload: (obj, { file }, { db }) => processUpload(file, db)
   }
 };
