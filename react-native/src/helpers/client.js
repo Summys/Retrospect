@@ -24,10 +24,6 @@ export const promisePersistCache = persistCache({
   debug: true,
 });
 
-// const httpLink = new HttpLink({
-//   uri: Config.ENDPOINT,
-// });
-
 const authMiddleware = setContext(() =>
   AsyncStorage.getItem('Meteor.loginToken').then(loginToken => ({
     headers: {

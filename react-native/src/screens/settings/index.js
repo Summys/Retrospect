@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import React, { Component } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View, Image, FlatList } from 'react-native';
 import ImagePicker from 'react-native-image-picker';
@@ -73,7 +74,6 @@ class Settings extends Component {
       },
       context: {
         type: 'isCreate',
-        replaceId: 'storyId',
       },
     });
   };

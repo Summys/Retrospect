@@ -20,7 +20,7 @@ const storeFS = ({ stream, filename }) => {
       .pipe(fs.createWriteStream(path))
       .on('error', error => reject(error))
       .on('finish', () => {
-        path = `http://167.99.32.172:3000/images/${id}` //Meteor.settings
+        path = `http://192.168.0.134:3000/images/${id}` //Meteor.settings
         resolve({ id, path })
       })
   );
