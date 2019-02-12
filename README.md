@@ -43,10 +43,15 @@ Run the server
 cd microservices/api/app/ && meteor npm start
 ```
 
-Run the client
+Run the client bundler
 ```
-cd react-native && yarn start:ios && yarn ios:dev
+cd react-native && yarn start:ios
 ```
+Run the client app
+```
+cd react-native && yarn ios:dev
+```
+
 
 ## Deployment
 
