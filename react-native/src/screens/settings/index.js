@@ -73,7 +73,7 @@ class Settings extends Component {
         });
       },
       context: {
-        type: 'isCreate',
+        type: 'isUpload',
       },
     });
   };

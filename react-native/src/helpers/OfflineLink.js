@@ -4,6 +4,7 @@
 import { ApolloLink, Observable } from 'apollo-link';
 import uuidv4 from 'uuid/v4';
 import gql from 'graphql-tag';
+import { ReactNativeFile } from 'apollo-upload-client';
 
 const syncStatusQuery = gql`
   query syncStatus {
@@ -37,17 +38,17 @@ export default class OfflineLink extends ApolloLink {
           error: async error => {
             const data = this.client.readQuery({
               query,
-              variables,
+              variables
             });
             observer.next({
               data,
-              error,
+              error
             });
             observer.complete();
           },
           complete: () => {
             observer.complete();
-          },
+          }
         });
         return () => {
           subscription.unsubscribe();
@@ -68,7 +69,7 @@ export default class OfflineLink extends ApolloLink {
           error: async () => {
             observer.complete();
           },
-          complete: () => observer.complete(),
+          complete: () => observer.complete()
         });
         return () => {
           subscription.unsubscribe();
@@ -84,8 +85,8 @@ export default class OfflineLink extends ApolloLink {
         context: {
           type: context.type,
           replaceId: context.replaceId,
-          operationName: operation.operationName,
-        },
+          operationName: operation.operationName
+        }
       };
       const attemptId = this.add(attempt);
 
@@ -99,11 +100,11 @@ export default class OfflineLink extends ApolloLink {
           observer.next({
             data: context.optimisticResponse,
             dataPresent: true,
-            errors: [],
+            errors: []
           });
           observer.complete();
         },
-        complete: () => observer.complete(),
+        complete: () => observer.complete()
       });
 
       return () => {
@@ -130,8 +131,8 @@ export default class OfflineLink extends ApolloLink {
       data: {
         __typename: 'SyncStatus',
         mutations: this.queue.size,
-        inflight,
-      },
+        inflight
+      }
     });
   }
 
@@ -157,7 +158,7 @@ export default class OfflineLink extends ApolloLink {
       if (optimisticId === attempt.variables[replaceId]) {
         const item = {
           ...attempt,
-          variables: { ...attempt.variables, [replaceId]: data[operationName]._id },
+          variables: { ...attempt.variables, [replaceId]: data[operationName]._id }
         };
         queue.delete(attemptId);
         queue.set(attemptId, item);
@@ -169,11 +170,26 @@ export default class OfflineLink extends ApolloLink {
     const { queue } = this;
     const attempts = Array.from(queue);
     for (const [attemptId, attempt] of attempts) {
+      if (attempt.context.type === 'isUpload') {
+        const file = new ReactNativeFile({ ...attempt.variables.file });
+        const result = await this.client.mutate({
+          ...attempt,
+          variables: { file },
+          optimisticResponse: undefined,
+          ignoreResults: true
+        });
+        if (result) {
+          queue.delete(attemptId);
+          this.updateIds(attempt, result);
+        } else {
+          break;
+        }
+      }
       if (attempt.context.type === 'isCreate') {
         const result = await this.client.mutate({
           ...attempt,
           optimisticResponse: undefined,
-          ignoreResults: true,
+          ignoreResults: true
         });
         if (result) {
           queue.delete(attemptId);
@@ -198,7 +214,7 @@ export default class OfflineLink extends ApolloLink {
       const result = await this.client.mutate({
         ...attempt,
         optimisticResponse: undefined,
-        ignoreResults: true,
+        ignoreResults: true
       });
       if (result) {
         queue.delete(attemptId);
